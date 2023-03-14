@@ -1,5 +1,8 @@
 package com.ll.basic1;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,10 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 // @Controller 의 의미
 // 개발자가 스프링부트에게 말한다.
@@ -256,6 +257,40 @@ public class HomeController {
         found.setAge(age);
 
         return "%d번 사람이 수정되었습니다.".formatted(id);
+    }
+
+    @GetMapping("/home/reqAndResp")
+    @ResponseBody
+    public void showReqAndResp(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        int age = Integer.parseInt(req.getParameter("age"));
+        resp.getWriter().append("Hello, you are %d years old.".formatted(age));
+    }
+
+    // 쿠키를 사용해서 스프링부트가 브라우저를 구별해서 응답하도록 함
+    @GetMapping("/home/cookie/increase")
+    @ResponseBody
+    public int showCookieIncrease(HttpServletRequest req, HttpServletResponse resp) throws IOException { // 리턴되는 int 값은 String 화 되어서 고객(브라우저)에게 전달된다.
+        int countInCookie = 0;
+
+        // 고객이 가져온 쿠폰에서 count 쿠폰을 찾고 그 쿠폰의 값을 가져와서 정수화한다.
+        if (req.getCookies() != null) {
+            countInCookie = Arrays.stream(req.getCookies())
+                    .filter(cookie -> cookie.getName().equals("count")) // 이름이 count인 쿠폰 찾기
+                    .map(Cookie::getValue)
+                    .mapToInt(Integer::parseInt)
+                    .findFirst()
+                    .orElse(0);
+        }
+
+        int newCountInCookie = countInCookie + 1;
+
+        // 고객이 가져온 count 쿠폰값에 1을 더한 쿠폰을 만들어서 고객에게 보낸다.
+        // 쉽게 말하면 브라우저(고객)에 저장되어 있는 count 쿠폰의 값을 1 증가시킨다.
+        // 이렇게 브라우저의 쿠키값을 변경하면 재방문시에 스프링부트가 다시 그 값을 받게 되어 있다.
+        resp.addCookie(new Cookie("count", newCountInCookie + ""));
+
+        // 응답 본문 리턴
+        return newCountInCookie;
     }
 }
 
