@@ -3,6 +3,7 @@ package com.ll.basic1;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,9 +20,11 @@ import java.util.Map;
 @Controller
 public class HomeController {
     private int count;
+    private List<Person> people;
 
     public HomeController() {
         count = -1;
+        people = new ArrayList<>();
     }
 
     // @GetMapping("/home/main") 의 의미
@@ -194,6 +197,25 @@ public class HomeController {
 
         return list;
     }
+
+    @GetMapping("/home/addPerson")
+    @ResponseBody
+    public String addPerson(String name, int age) {
+        Person p = new Person(name, age);
+
+        System.out.println(p); // 콘솔에 출력해서 확인하기 위한 코드
+        // @ToString을 Person 클래스에 달아줘야 문자열로 확인 가능해짐
+
+        people.add(p);
+
+        return "%d번 사람이 추가되었습니다.".formatted(p.getId());
+    }
+
+    @GetMapping("/home/people")
+    @ResponseBody
+    public List<Person> showPeople() {
+        return people;
+    }
 }
 
     class Car {
@@ -237,7 +259,7 @@ public class HomeController {
         private String name;
         private final List<Integer> relatedIds;
 
-        /* @AllArgsConstructor: 아래 코드 자동생성
+        /* @AllArgsConstructor: 아래 코드 자동생성(생략가능)
         public Car(int id, int speed, String name, List<Integer> relatedIds) {
                this.id = id;
                this.speed = speed;
@@ -246,3 +268,24 @@ public class HomeController {
         }
         */
     }
+
+    @AllArgsConstructor // 생성자1
+    @Getter
+    @ToString // ToString 메서드 생성
+    class Person {
+        private static int lastId; // Person 객체에서 연속적으로 기억되야 하므로 static
+        private final int id;
+        private final String name;
+        private final int age;
+
+
+        static {
+            lastId = 0;
+        }
+
+        // 생성자2
+        Person(String name, int age) {
+            this(++lastId, name, age);
+        }
+    }
+
