@@ -226,12 +226,36 @@ public class HomeController {
         // removed 에는 삭제수행여부가 저장된다.
         // 조건에 맞는걸 찾았고 삭제까지 되었다면 true, 아니면 false
         boolean removed = people.removeIf(person -> person.getId() == id);
+        /* stream 안쓴 버전
+        for ( Person p : people ) {
+            if ( p.getId() == id ) people.remove(p);
+        }
+         */
 
         if (removed == false) {
             return "%d번 사람이 존재하지 않습니다.".formatted(id);
         }
 
         return "%d번 사람이 삭제되었습니다.".formatted(id);
+    }
+
+    @GetMapping("/home/modifyPerson")
+    @ResponseBody
+    public String modifyPerson(int id, String name, int age) {
+        Person found = people
+                .stream()
+                .filter(p -> p.getId() == id) // id와 일치하는 것만 필터링
+                .findFirst()
+                .orElse(null);
+
+        if (found == null) {
+            return "%d번 사람이 존재하지 않습니다.".formatted(id);
+        }
+
+        found.setName(name);
+        found.setAge(age);
+
+        return "%d번 사람이 수정되었습니다.".formatted(id);
     }
 }
 
@@ -248,7 +272,7 @@ public class HomeController {
             this.relatedIds = relatedIds;
         }
 
-        // getter메서드가 없으면 private이라 출력안됨
+        // getter메서드가 없으면 private이라 리턴안됨
         public int getId() {
             return id;
         }
@@ -292,8 +316,10 @@ public class HomeController {
     class Person {
         private static int lastId; // Person 객체에서 연속적으로 기억되야 하므로 static
         private final int id;
-        private final String name;
-        private final int age;
+        @Setter
+        private String name;
+        @Setter
+        private int age;
 
 
         static {
