@@ -17,11 +17,16 @@ public class MemberController {
     @GetMapping("/member/login")
     @ResponseBody
     public RsData login(String username, String password) {
-//        Map<String, Object> rsData = new LinkedHashMap<>() {{
-//            put("resultCode", "S-1");
-//            put("msg", "%s 님 환영합니다.".formatted(username));
-//        }};
-// Rs는 Result를 의미
+
+        // Controller는 문지기 역할, 복잡한 일은 Service에게 토스
+        if ( username == null || username.trim().length() == 0 ) {
+            return RsData.of("F-3", "username(을)를 입력해주세요.");
+        }
+
+        if ( password == null || password.trim().length() == 0 ) {
+            return RsData.of("F-4", "password(을)를 입력해주세요.");
+        }
+
         return memberService.tryLogin(username, password);
         // Controller는 인포직원이라 판단하지 않고 Service에게 토스함 -> Service 생성
         // tryLogin: 인포직원이 서비스에게 username과 password를 주면서 로그인해보라고 요청
