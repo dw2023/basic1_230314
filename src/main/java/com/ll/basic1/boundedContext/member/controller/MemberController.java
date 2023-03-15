@@ -77,7 +77,7 @@ public class MemberController {
             loginedMemberId = Arrays.stream(req.getCookies())
                     .filter(cookie -> cookie.getName().equals("loginedMemberId")) // 이름이 loginedMemberId인 쿠키 찾기
                     .map(Cookie::getValue)
-                    .mapToInt(Integer::parseInt)
+                    .mapToLong(Long::parseLong)
                     .findFirst()
                     .orElse(0);
         }
