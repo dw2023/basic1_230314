@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,14 +23,14 @@ import java.util.*;
 @Controller
 public class HomeController {
     private int count;
-    private List<Person> people;
-    @Autowired // 필드 주입: 자동으로 MemberService 객체 생성(객체 직접생성 X) + MemberService에 @Component 달아줘야함
-    private MemberService memberService;
-    // Conroller는 Service 수준에만 접근할 수 있기 때문에, MemberRepository는 절대 쓰면 안됨
+    private final List<Person> people; // 왠만하면 final 다 붙이는 게 좋음 (실수예방)
+    private final MemberService memberService; // 필드 주입 -> 생성자 주입 (변경)
 
-    public HomeController() {
+    // @Autowired 생략가능
+    public HomeController(MemberService memberService) {
         count = -1;
         people = new ArrayList<>();
+        this.memberService = memberService;
     }
 
     // @GetMapping("/home/main") 의 의미
