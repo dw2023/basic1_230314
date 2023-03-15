@@ -44,8 +44,8 @@ public class MemberController {
         RsData rsData = memberService.tryLogin(username, password);
 
         if (rsData.isSuccess()) {
-            long memberId = (long) rsData.getData(); // data는 Object이므로 long으로 형변환함
-            resp.addCookie(new Cookie("loginedMemberId", memberId + ""));
+            Member member = (Member) rsData.getData();
+            resp.addCookie(new Cookie("loginedMemberId", member.getId() + ""));
         } // 로그인 성공여부 판단 메서드 isSuccess()가 true 이면 쿠키 만듦
 
         return rsData;
