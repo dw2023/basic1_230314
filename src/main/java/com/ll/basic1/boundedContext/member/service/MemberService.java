@@ -3,7 +3,12 @@ package com.ll.basic1.boundedContext.member.service;
 import com.ll.basic1.base.rsData.RsData;
 import com.ll.basic1.boundedContext.member.entity.Member;
 import com.ll.basic1.boundedContext.member.repository.MemberRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+// @Component : 아래 클래스의 객체는 Ioc 컨테이너(일명 공용도구상자)에 의해 생사소멸 관리된다.
+// @Service : @Component 와 같은 의미, 가독성 때문에 이렇게 표기
+@Service
 public class MemberService {
     private MemberRepository memberRepository;
 
