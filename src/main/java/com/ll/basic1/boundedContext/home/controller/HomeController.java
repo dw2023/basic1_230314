@@ -1,4 +1,4 @@
-package com.ll.basic1;
+package com.ll.basic1.boundedContext.home.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -279,7 +279,7 @@ public class HomeController {
                     .map(Cookie::getValue)
                     .mapToInt(Integer::parseInt)
                     .findFirst()
-                    .orElse(0);
+                    .orElse(0); // 위 모든 과정이 실패하면 0
         }
 
         int newCountInCookie = countInCookie + 1;
@@ -292,7 +292,6 @@ public class HomeController {
         // 응답 본문 리턴
         return newCountInCookie;
     }
-}
 
     class Car {
         private final int id;
@@ -366,4 +365,4 @@ public class HomeController {
             this(++lastId, name, age);
         }
     }
-
+}
