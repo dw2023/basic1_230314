@@ -1,5 +1,7 @@
 package com.ll.basic1.boundedContext.home.controller;
 
+import com.ll.basic1.boundedContext.member.entity.Member;
+import com.ll.basic1.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,10 +24,13 @@ import java.util.*;
 public class HomeController {
     private int count;
     private List<Person> people;
+    private MemberService memberService;
+    // Conroller는 Service 수준에만 접근할 수 있기 때문에, MemberRepository는 절대 쓰면 안됨
 
     public HomeController() {
         count = -1;
         people = new ArrayList<>();
+        memberService = new MemberService();
     }
 
     // @GetMapping("/home/main") 의 의미
@@ -293,6 +298,13 @@ public class HomeController {
         return newCountInCookie;
     }
 
+    @GetMapping("/home/user1")
+    @ResponseBody
+    public Member showUser1() {
+        return memberService.findByUsername("user1");
+    }
+}
+
     class Car {
         private final int id;
         private final int speed;
@@ -365,4 +377,3 @@ public class HomeController {
             this(++lastId, name, age);
         }
     }
-}

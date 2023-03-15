@@ -24,4 +24,10 @@ public class MemberService {
 
         return RsData.of("S-1", "%s 님 환영합니다.".formatted(username));
     }
+
+    // HomeController가 findByUsername 메서드를 호출했으나
+    // Controller는 Repository에게 바로 명령할 수 없고 MemberService에 findByUsername 메서드가 없으므로 생성
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
 }
