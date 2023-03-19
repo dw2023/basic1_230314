@@ -28,22 +28,8 @@ public class MemberController {
 
     // 로그인 성공한 회원의 id를 쿠키 값으로 만듦
     @GetMapping("/member/login")
-    @ResponseBody
     public String showLogin() {
-        if (rq.isLogined()) {
-            return """
-                    <h1>이미 로그인 되었습니다.</h1>
-                    """.stripIndent();
-        } // 로그인 이미 되어있을 때
-
-        return """
-                <h1>로그인</h1>
-                <form action="doLogin">
-                <input type="text" placeholder="아이디" name="username">
-                <input type="password" placeholder="비번호" name="password">
-                <input type="submit" value="로그인">
-                </form>
-                """;
+        return "usr/member/login";
     }
 
     @GetMapping("/member/doLogin")
