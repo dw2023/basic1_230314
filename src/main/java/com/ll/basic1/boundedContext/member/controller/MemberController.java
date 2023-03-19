@@ -42,7 +42,7 @@ public class MemberController {
 
         if (rsData.isSuccess()) {
             Member member = (Member) rsData.getData();
-            rq.setCookie("loginedMemberId", member.getId()); // member.getId()가 숫자 or 문자열 다 들어가도 됨
+            rq.setSession("loginedMemberId", member.getId()); // member.getId()가 숫자 or 문자열 다 들어가도 됨
         } // 로그인 성공여부 판단 메서드 isSuccess()가 true 이면 쿠키 만듦
 
         return rsData;
@@ -51,7 +51,7 @@ public class MemberController {
     @GetMapping("/member/logout") // logout 시 쿠키 지우기 using ChatGPT
     @ResponseBody
     public RsData logout() {
-        boolean cookieRemoved = rq.removeCookie("loginedMemberId");
+        boolean cookieRemoved = rq.removeSession("loginedMemberId");
 
         if (cookieRemoved == false) { // 쿠키 삭제 안됨 == name인 쿠키 없음
             return RsData.of("S-2", "이미 로그아웃 상태입니다.");
@@ -64,7 +64,7 @@ public class MemberController {
     @GetMapping("/member/me")
     @ResponseBody
     public RsData showMe() {
-        long loginedMemberId = rq.getCookieAsLong("loginedMemberId", 0); // rq에게 쿠키 값 요청
+        long loginedMemberId = rq.getSessionAsLong("loginedMemberId", 0); // rq에게 쿠키 값 요청
 
         boolean isLogined = loginedMemberId > 0; // 0보다 크면 로그인된 것임
 
@@ -74,5 +74,12 @@ public class MemberController {
         Member member = memberService.findById(loginedMemberId); // Service를 거쳐 Repository에게 요청됨
 
         return RsData.of("S-1", "당신의 username(은)는 %s 입니다.".formatted(member.getUsername()));
+    }
+
+    // 디버깅용 함수
+    @GetMapping("/member/session")
+    @ResponseBody
+    public String showSession() {
+        return rq.getSessionDebugContents().replaceAll("\n", "<br>");
     }
 }
