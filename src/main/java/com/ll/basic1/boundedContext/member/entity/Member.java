@@ -1,10 +1,12 @@
 package com.ll.basic1.boundedContext.member.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
-@Data // Getter, Setter, RequiredArgsConstructor, ToString 등 다 들어가있음
+@Getter
+@ToString
 public class Member {
     private static long lastId;
     private final long id;

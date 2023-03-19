@@ -1,5 +1,9 @@
-<h1>내 정보</h1>
+<div th:if="${member != null}">
+    <h1>내 정보</h1>
 
-<!-- [[${member.id}]]는 thymeleaf 문법- html에서 사용 -->
-<h2>회원번호 : [[${member.id}]]</h2>
-<h2>아이디 : [[${member.username}]]</h2>
+    <h2>회원번호 : [[${member.id}]]</h2>
+    <h2>아이디 : [[${member.username}]]</h2>
+</div>
+<div th:if="${member == null}">
+    <h1>로그인 후 이용해주세요.</h1>
+</div>
