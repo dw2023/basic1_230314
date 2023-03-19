@@ -4,8 +4,10 @@ import com.ll.basic1.base.rq.Rq;
 import com.ll.basic1.base.rsData.RsData;
 import com.ll.basic1.boundedContext.member.entity.Member;
 import com.ll.basic1.boundedContext.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,18 +70,15 @@ public class MemberController {
 
     //
     @GetMapping("/member/me")
-    @ResponseBody
-    public RsData showMe() {
-        long loginedMemberId = rq.getSessionAsLong("loginedMemberId", 0); // rq에게 쿠키 값 요청
-
-        boolean isLogined = loginedMemberId > 0; // 0보다 크면 로그인된 것임
-
-        if (isLogined == false) // 로그인 상태가 아닐 때(쿠키가 없으면 logout 상태임)
-            return RsData.of("F-1", "로그인 후 이용해주세요.");
+    public String showMe(Model model) {
+        long loginedMemberId = rq.getLoginedMemberId();
 
         Member member = memberService.findById(loginedMemberId); // Service를 거쳐 Repository에게 요청됨
 
-        return RsData.of("S-1", "당신의 username(은)는 %s 입니다.".formatted(member.getUsername()));
+        model.addAttribute("member", member); // member 객체를 usr/member/me에서 쓸 수 있도록 등록
+        // attributeName으로 meber에 접근할 수 있음
+
+        return "usr/member/me";
     }
 
     // 디버깅용 함수

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @AllArgsConstructor
-@Data
+@Data // Getter, Setter, RequiredArgsConstructor, ToString 등 다 들어가있음
 public class Member {
     private static long lastId;
     private final long id;
