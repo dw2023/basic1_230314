@@ -122,4 +122,14 @@ public class Rq {
 
         return sb.toString();
     }
+
+    public boolean isLogined() {
+        long loginedMemberId = getSessionAsLong("loginedMemberId", 0);
+        // 세션에서 name이 loginedMemberId인 값 꺼내서 0이 아니라면 로그인한 것 = t
+        return loginedMemberId > 0;
+    }
+
+    public boolean isLogout() {
+        return !isLogined();
+    }
 }
