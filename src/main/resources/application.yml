@@ -17,3 +17,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create # DB 테이블 자동생성(엔티티 클래스만 만들면 됨)
+      properties:
+        hibernate:
+          show_sql: true
